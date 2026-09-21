@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f4cd6e">
+<title>Un regalo para ti 🌻</title>
+<meta name="description" content="Un pequeño jardín de girasoles y un mensaje, hecho para ti.">
+<meta property="og:title" content="🌻 Tengo algo para ti">
+<meta property="og:description" content="Toca para descubrirlo...">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%BB%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream-top:#fdf6de;
+    --gold-mid:#f4cd6e;
+    --honey-deep:#dfa22e;
+    --umber:#5a3a22;
+    --umber-dark:#432a18;
+    --forest:#4b6b3a;
+    --wine:#7d2e3b;
+    --ink:#3c2a18;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:linear-gradient(180deg,var(--cream-top) 0%,var(--gold-mid) 55%,var(--honey-deep) 100%);
+    color:var(--ink);
+    font-family:'Lora',serif;
+    overflow-x:hidden;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .cover{
+    position:fixed;inset:0;z-index:50;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;
+    background:linear-gradient(180deg,var(--cream-top) 0%,var(--gold-mid) 55%,var(--honey-deep) 100%);
+    border:none;width:100%;font-family:inherit;color:inherit;cursor:pointer;
+    transition:opacity .7s ease;
+    padding:2rem;
+  }
+  .cover.hidden{opacity:0;pointer-events:none;}
+  .cover-hint{font-size:.95rem;letter-spacing:.02em;color:var(--umber);opacity:.85;}
+  .cover-flower{font-size:clamp(4.5rem,22vw,6.5rem);animation:pulse 1.8s ease-in-out infinite;filter:drop-shadow(0 8px 18px rgba(90,58,34,.35));}
+  .cover-cta{font-size:1.05rem;color:var(--umber-dark);font-weight:500;}
+  .cover:focus-visible{outline:3px solid var(--wine);outline-offset:6px;}
+
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+
+  .page{max-width:460px;margin:0 auto;padding:3rem 1.5rem 4rem;text-align:center;}
+
+  .title{
+    font-family:'Beau Rivage',cursive;
+    font-size:clamp(2.1rem,8vw,3rem);
+    color:var(--umber-dark);
+    margin:0 0 1.75rem;
+    line-height:1.25;
+    min-height:1.4em;
+  }
+  .letter{max-width:38ch;margin:0 auto;}
+  .paragraph{
+    font-style:italic;
+    font-size:clamp(1.05rem,3.6vw,1.2rem);
+    line-height:1.7;
+    margin:0 0 1.1rem;
+    min-height:1.7em;
+  }
+  .signature{
+    font-family:'Beau Rivage',cursive;
+    font-style:normal;
+    font-size:clamp(1.6rem,6vw,2rem);
+    color:var(--wine);
+    margin-top:1.5rem;
+    min-height:1.3em;
+  }
+  .typing::after{
+    content:'|';
+    animation:blink .85s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+
+  .tree-wrap{
+    position:relative;
+    width:min(92%,340px);
+    height:clamp(260px,78vw,340px);
+    margin:2.5rem auto 0;
+  }
+  .ground{
+    position:absolute;bottom:-6px;left:50%;
+    width:74px;height:18px;
+    transform:translateX(-50%);
+    background:var(--forest);
+    border-radius:50%;
+    opacity:.5;
+    filter:blur(2px);
+  }
+  .canopy{position:absolute;inset:0;bottom:92px;}
+  .flower{
+    position:absolute;
+    transform:scale(0) rotate(0deg);
+    opacity:0;
+    transform-origin:center 60%;
+    transition:transform .55s cubic-bezier(.34,1.56,.64,1),opacity .5s ease;
+    will-change:transform,opacity;
+    line-height:1;
+  }
+  .flower.visible{transform:scale(1) rotate(0deg);opacity:1;}
+  .flower.sway{animation:sway var(--dur,3s) ease-in-out var(--delay,0s) infinite alternate;}
+  .flower.falling{animation:fall var(--fdur,3.2s) linear forwards;}
+  @keyframes sway{from{transform:scale(1) rotate(-9deg);}to{transform:scale(1) rotate(9deg);}}
+  @keyframes fall{
+    0%{transform:scale(1) translate(0,0) rotate(0deg);opacity:1;}
+    100%{transform:scale(.9) translate(var(--dx,18px),240px) rotate(300deg);opacity:0;}
+  }
+
+  .trunk{
+    position:absolute;bottom:0;left:50%;
+    width:32px;height:92px;
+    background:linear-gradient(180deg,#7c5738,var(--umber-dark));
+    clip-path:polygon(36% 100%,64% 100%,58% 0%,42% 0%);
+    transform:translateX(-50%) scaleY(0);
+    transform-origin:bottom center;
+    transition:transform 1.15s cubic-bezier(.34,1.2,.64,1);
+  }
+  .trunk.grow{transform:translateX(-50%) scaleY(1);}
+
+  .closing{
+    font-style:italic;
+    color:var(--umber-dark);
+    font-size:clamp(1rem,3.4vw,1.15rem);
+    max-width:32ch;margin:2.25rem auto 0;
+    min-height:1.6em;
+  }
+
+  .replay{
+    display:block;margin:3rem auto 0;
+    background:none;border:none;
+    font-family:'Lora',serif;font-style:italic;
+    font-size:.9rem;color:var(--umber);
+    opacity:.7;cursor:pointer;
+    padding:.5rem 1rem;
+  }
+  .replay:hover,.replay:focus-visible{opacity:1;}
+
+  @media (prefers-reduced-motion:reduce){
+    .cover-flower,.flower.sway,.flower.falling{animation:none !important;}
+    .flower{transition:opacity .4s ease !important;}
+    .flower.visible{opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<button id="cover" class="cover" aria-label="Toca para abrir tu regalo">
+  <span class="cover-hint">Tengo algo para ti</span>
+  <span class="cover-flower">🌻</span>
+  <span class="cover-cta">Toca el girasol</span>
+</button>
+
+<main class="page">
+  <h1 id="title" class="title"></h1>
+  <div id="letter" class="letter">
+    <p id="p0" class="paragraph"></p>
+    <p id="p1" class="paragraph"></p>
+    <p id="p2" class="paragraph"></p>
+    <p id="signature" class="signature"></p>
+  </div>
+
+  <div class="tree-wrap">
+    <div class="ground"></div>
+    <div id="canopy" class="canopy"></div>
+    <div id="trunk" class="trunk"></div>
+  </div>
+
+  <p id="closing" class="closing"></p>
+
+  <button id="replay" class="replay" hidden>🔁 Ver de nuevo</button>
+</main>
+
+<script>
+(function(){
+  /* ======================================================
+     ✏️  PERSONALIZA AQUÍ TU MENSAJE (y nada más hace falta tocar)
+     ====================================================== */
+  const CONFIG = {
+    title: "🌻 Toma tus Flores Amarillas mi amor🌻",
+    paragraphs: [
+      "Se que no es la gran cosa, pero con el tiempo que tenia, es lo que apenas pude hacer, espero te guste mi amor. Ojala tener el presupuesto para regalarte flores de verdad."
+    ],
+    signature: "— Te amo, mi reina",
+    closing: "Sos lo mejor de mi vida mi reina.",
+    flowerCount: 90
+  };
+  /* ====================================================== */
+
+  const cover = document.getElementById('cover');
+  const trunk = document.getElementById('trunk');
+  const canopy = document.getElementById('canopy');
+  const replay = document.getElementById('replay');
+  const els = {
+    title: document.getElementById('title'),
+    p0: document.getElementById('p0'),
+    p1: document.getElementById('p1'),
+    p2: document.getElementById('p2'),
+    signature: document.getElementById('signature'),
+    closing: document.getElementById('closing')
+  };
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function heartPoint(t){
+    const x = 16*Math.pow(Math.sin(t),3);
+    const y = 13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t);
+    return {x:x,y:y};
+  }
+
+  // Calculamos una sola vez el "rectángulo" real que ocupa el corazón,
+  // para que siempre encaje bien sin importar el tamaño de pantalla.
+  const HEART_BOUNDS = (function(){
+    let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+    for(let i=0;i<240;i++){
+      const p = heartPoint((i/240)*Math.PI*2);
+      if(p.x<minX)minX=p.x;
+      if(p.x>maxX)maxX=p.x;
+      if(p.y<minY)minY=p.y;
+      if(p.y>maxY)maxY=p.y;
+    }
+    return {minX:minX,maxX:maxX,minY:minY,maxY:maxY};
+  })();
+
+  function generateCanopy(){
+    const w = canopy.clientWidth;
+    const h = canopy.clientHeight;
+    const usableW = w*0.84;
+    const usableH = h*0.88;
+    const scale = Math.min(
+      usableW/(HEART_BOUNDS.maxX-HEART_BOUNDS.minX),
+      usableH/(HEART_BOUNDS.maxY-HEART_BOUNDS.minY)
+    );
+    const bottomY = h*0.97;
+    const count = CONFIG.flowerCount;
+
+    for(let i=0;i<count;i++){
+      const t = Math.random()*Math.PI*2;
+      const r = 0.2 + Math.random()*0.8;
+      const p = heartPoint(t);
+      const px = w/2 + p.x*r*scale + (Math.random()*16-8);
+      const py = bottomY - (p.y*r - HEART_BOUNDS.minY)*scale + (Math.random()*16-8);
+
+      const flower = document.createElement('span');
+      flower.className = 'flower';
+      flower.textContent = Math.random() < 0.16 ? '🌼' : '🌻';
+      flower.style.left = px+'px';
+      flower.style.top = py+'px';
+      flower.style.fontSize = (0.95+Math.random()*0.85)+'rem';
+      flower.style.setProperty('--dur',(2.6+Math.random()*2.4)+'s');
+      flower.style.setProperty('--delay',(Math.random()*2)+'s');
+      flower.style.setProperty('--fdur',(2.8+Math.random()*1.6)+'s');
+      flower.style.setProperty('--dx',(Math.random()*40-20)+'px');
+      flower.style.transitionDelay = (i*9)+'ms';
+      canopy.appendChild(flower);
+
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){ flower.classList.add('visible'); });
+      });
+
+      if(!reduceMotion && Math.random()<0.18){
+        setTimeout(function(){ flower.classList.add('falling'); }, 1600+Math.random()*2200);
+        flower.addEventListener('animationend', function(){ flower.remove(); });
+      } else if(!reduceMotion){
+        flower.classList.add('sway');
+      }
+    }
+
+    if(!reduceMotion){
+      let trickles = 0;
+      const trickleTimer = setInterval(function(){
+        const candidates = canopy.querySelectorAll('.flower.sway');
+        if(candidates.length===0 || trickles>22){
+          clearInterval(trickleTimer);
+          return;
+        }
+        const f = candidates[Math.floor(Math.random()*candidates.length)];
+        f.classList.remove('sway');
+        f.classList.add('falling');
+        f.addEventListener('animationend', function(){ f.remove(); });
+        trickles++;
+      },1500);
+    }
+  }
+
+  function typeText(el,text,speed){
+    return new Promise(function(resolve){
+      el.textContent='';
+      el.classList.add('typing');
+      let i=0;
+      (function step(){
+        if(i<=text.length){
+          el.textContent = text.slice(0,i);
+          i++;
+          setTimeout(step,speed);
+        } else {
+          el.classList.remove('typing');
+          resolve();
+        }
+      })();
+    });
+  }
+
+  async function writeLetter(){
+    await typeText(els.title, CONFIG.title, 42);
+    await typeText(els.p0, CONFIG.paragraphs[0], 26);
+    await typeText(els.p1, CONFIG.paragraphs[1], 26);
+    await typeText(els.p2, CONFIG.paragraphs[2], 26);
+    await typeText(els.signature, CONFIG.signature, 55);
+    await typeText(els.closing, CONFIG.closing, 26);
+    replay.hidden = false;
+  }
+
+  function startExperience(){
+    cover.classList.add('hidden');
+    setTimeout(function(){ cover.setAttribute('hidden',''); },750);
+
+    trunk.classList.add('grow');
+    setTimeout(generateCanopy, 300);
+    setTimeout(writeLetter, 700);
+  }
+
+  function resetExperience(){
+    Object.keys(els).forEach(function(key){
+      els[key].textContent='';
+      els[key].classList.remove('typing');
+    });
+    canopy.innerHTML='';
+    trunk.classList.remove('grow');
+    replay.hidden = true;
+    cover.removeAttribute('hidden');
+    requestAnimationFrame(function(){ cover.classList.remove('hidden'); });
+  }
+
+  cover.addEventListener('click', startExperience);
+  replay.addEventListener('click', resetExperience);
+})();
+</script>
+</body>
+</html>
